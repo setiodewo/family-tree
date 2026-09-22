@@ -333,16 +333,25 @@ class FamilyTree {
       const cx = card.x + card.w / 2;
       const rowTop = card.y - (LAYOUT.NODE_H + LAYOUT.GEN_GAP);
       const couple = pu.partners.length > 1;
+      let leftP = pu.partners[0];
+      let rightP = pu.partners[1];
+      if (couple) {
+        const gs = (pid) => (this.person(pid) || {}).gender;
+        if (gs(leftP) === "female" && gs(rightP) === "male") {
+          leftP = pu.partners[1];
+          rightP = pu.partners[0];
+        }
+      }
       const p1x = cx + (couple ? -halfGap : 0) - LAYOUT.NODE_W / 2;
-      const sc1 = { personId: pu.partners[0], x: p1x, y: rowTop, w: LAYOUT.NODE_W, h: LAYOUT.NODE_H };
+      const sc1 = { personId: leftP, x: p1x, y: rowTop, w: LAYOUT.NODE_W, h: LAYOUT.NODE_H };
       this.cards.push(sc1);
-      known.add(pu.partners[0]);
+      known.add(leftP);
       queue.push(sc1);
       const parents = [sc1];
       if (couple) {
-        const sc2 = { personId: pu.partners[1], x: cx + halfGap - LAYOUT.NODE_W / 2, y: rowTop, w: LAYOUT.NODE_W, h: LAYOUT.NODE_H };
+        const sc2 = { personId: rightP, x: cx + halfGap - LAYOUT.NODE_W / 2, y: rowTop, w: LAYOUT.NODE_W, h: LAYOUT.NODE_H };
         this.cards.push(sc2);
-        known.add(pu.partners[1]);
+        known.add(rightP);
         queue.push(sc2);
         parents.push(sc2);
       }
