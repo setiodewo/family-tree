@@ -2,11 +2,11 @@
 
 Aplikasi web **silsilah keluarga** berbasis Canvas 2D tanpa dependensi eksternal. Aplikasi memulai dengan **tanpa data awal** — hanya satu kartu permulaan; data tersimpan otomatis di `localStorage`, dan dapat disimpan/dibuka sebagai berkas dengan ekstensi `.tree`.
 
-## Contoh
-
 Demo: [family.swatizen.com](https://family.swatizen.com)
 
 [![Demo video di YouTube](https://img.youtube.com/vi/JyP2bo7CQ0c/hqdefault.jpg)](https://youtu.be/JyP2bo7CQ0c)
+
+## Contoh
 
 ![Contoh silsilah keluarga](contoh-silsilah2.png)
 
