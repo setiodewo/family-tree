@@ -75,6 +75,6 @@ Tidak ada framework dan tidak ada dependensi — cukup HTML, CSS, dan JavaScript
 
 ## Kredit
 
-Dibuat oleh: Emanuel Setio Dewo
+Dibuat oleh: Emanuel Setio Dewo dengan Vibe Coding
 
 Tools: OpenCode + Big Pickle
