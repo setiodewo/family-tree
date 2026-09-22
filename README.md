@@ -4,9 +4,11 @@ Aplikasi web **silsilah keluarga** berbasis Canvas 2D tanpa dependensi eksternal
 
 ## Contoh
 
-![Contoh silsilah keluarga](contoh-silsilah2.png)
-
 Demo: [family.swatizen.com](https://family.swatizen.com)
+
+[![Demo video di YouTube](https://img.youtube.com/vi/JyP2bo7CQ0c/hqdefault.jpg)](https://youtu.be/JyP2bo7CQ0c)
+
+![Contoh silsilah keluarga](contoh-silsilah2.png)
 
 ## Fitur
 
