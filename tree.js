@@ -591,6 +591,15 @@ class FamilyTree {
     ctx.textBaseline = "middle";
     ctx.fillText(this.initials(p), cx, cy + 0.5);
 
+    const aliveDot = !p.death;
+    ctx.beginPath();
+    ctx.arc(card.x + card.w - 16, card.y + 17, 5, 0, Math.PI * 2);
+    ctx.fillStyle = aliveDot ? "#22c55e" : "#334155";
+    ctx.fill();
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
     ctx.fillStyle = "#1e293b";
