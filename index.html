@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Family Tree &mdash; Silsilah Keluarga</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="5" r="2.6" />
+          <circle cx="5.5" cy="18" r="2.4" />
+          <circle cx="18.5" cy="18" r="2.4" />
+          <path d="M12 7.6v3.4M12 11H5.5v4.2M12 11h6.5v4.2" />
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h1>Family Tree</h1>
+        <input id="treeTitle" class="brand-sub" type="text" value="Silsilah Keluarga Santoso" maxlength="70" spellcheck="false" aria-label="Judul silsilah" title="Klik untuk mengubah judul silsilah" />
+      </div>
+    </div>
+
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.2-3.2" />
+      </svg>
+      <input id="searchInput" type="search" placeholder="Cari nama anggota keluarga..." autocomplete="off" />
+      <button id="searchClear" class="search-clear" type="button" aria-label="Bersihkan">&times;</button>
+    </div>
+
+    <div class="topbar-actions">
+      <button id="openFileBtn" class="btn" type="button" title="Buka file silsilah (.tree)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
+        </svg>
+        <span>Buka file</span>
+      </button>
+      <button id="saveFileBtn" class="btn" type="button" title="Simpan silsilah ke file (.tree)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v12" />
+          <path d="m7 10 5 5 5-5" />
+          <path d="M4 19h16" />
+        </svg>
+        <span>Simpan file</span>
+      </button>
+      <button id="clearBtn" class="btn" type="button" title="Kosongkan kanvas &amp; mulai dari awal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m9.5 2 8.5 8.5-5 5L4.5 7z" />
+          <path d="M6 18l-3 4" />
+        </svg>
+        <span>Kosongkan</span>
+      </button>
+      <input id="fileInput" type="file" accept=".tree,.json,application/json" hidden />
+      <button id="fitBtn" class="btn" type="button" title="Sesuaikan ke layar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 9V5a1 1 0 0 1 1-1h4M20 9V5a1 1 0 0 0-1-1h-4M4 15v4a1 1 0 0 0 1 1h4M20 15v4a1 1 0 0 1-1 1h-4" />
+        </svg>
+        <span>Fit</span>
+      </button>
+      <button id="centerBtn" class="btn" type="button" title="Pusatkan ke anggota terpilih">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="8" />
+          <circle cx="12" cy="12" r="2.4" />
+          <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
+        </svg>
+        <span>Pusatkan</span>
+      </button>
+      <button id="resetBtn" class="btn" type="button" title="Kembali ke seluruh pohon keluarga">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+          <path d="M3 3v5h5" />
+        </svg>
+        <span>Seluruh Pohon</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <section class="canvas-wrap">
+      <canvas id="treeCanvas"></canvas>
+
+      <div class="legend" id="legend">
+        <div class="legend-row"><span class="dot male"></span>Laki-laki</div>
+        <div class="legend-row"><span class="dot female"></span>Perempuan</div>
+        <div class="legend-row"><span class="line"></span>Hubungan keluarga</div>
+      </div>
+
+      <div class="hub-tooltip" id="hubTooltip" hidden></div>
+
+      <div class="zoom-controls">
+        <button id="zoomIn" class="zoom-btn" type="button" aria-label="Perbesar">+</button>
+        <button id="zoomOut" class="zoom-btn" type="button" aria-label="Perkecil">&minus;</button>
+        <button id="zoomReset" class="zoom-btn" type="button" aria-label="Reset">&#9673;</button>
+      </div>
+
+      <div class="hint" id="hint">Klik anggota untuk detail &bull; Tahan &amp; geser untuk menggeser &bull; Scroll untuk zoom</div>
+    </section>
+
+    <aside class="details" id="details">
+      <div class="details-empty" id="detailsEmpty">
+        <div class="empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="3.4" />
+            <path d="M4.5 20a7.5 7.5 0 0 1 15 0" />
+          </svg>
+        </div>
+        <h3>Pilih anggota keluarga</h3>
+        <p>Klik salah satu kartu pada silsilah untuk melihat informasi lengkap beserta hubungan keluarganya.</p>
+      </div>
+
+      <div class="details-content" id="detailsContent" hidden>
+        <div class="details-tools">
+          <button class="icon-btn" id="editBtn" type="button" title="Edit detail" aria-label="Edit detail">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9" />
+              <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+            </svg>
+          </button>
+          <button class="icon-btn" id="deleteBtn" type="button" title="Hapus anggota" aria-label="Hapus anggota">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18" />
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+              <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              <path d="M10 11v6" />
+              <path d="M14 11v6" />
+            </svg>
+          </button>
+          <button class="icon-btn" id="detailsClose" type="button" aria-label="Tutup">&times;</button>
+        </div>
+        <div class="profile-head">
+          <div class="avatar avatar-lg" id="dAvatar"></div>
+          <div>
+            <h2 id="dName"></h2>
+            <p class="lifespan" id="dLife"></p>
+            <span class="badge" id="dGender"></span>
+          </div>
+        </div>
+
+        <dl class="info-grid" id="dInfo"></dl>
+
+        <p class="bio" id="dBio"></p>
+
+        <div class="relations">
+          <div class="relation-group">
+            <h4>Orang Tua
+              <button class="add-btn" id="addParent" type="button" title="Tambah orang tua" aria-label="Tambah orang tua">+</button>
+            </h4>
+            <div class="chips" id="dParents"></div>
+          </div>
+          <div class="relation-group">
+            <h4>Pasangan
+              <button class="add-btn" id="addSpouse" type="button" title="Tambah pasangan" aria-label="Tambah pasangan">+</button>
+            </h4>
+            <div class="chips" id="dSpouses"></div>
+          </div>
+          <div class="relation-group">
+            <h4>Anak
+              <button class="add-btn" id="addChild" type="button" title="Tambah anak" aria-label="Tambah anak">+</button>
+            </h4>
+            <div class="chips" id="dChildren"></div>
+          </div>
+          <div class="relation-group">
+            <h4>Saudara
+              <button class="add-btn" id="addSibling" type="button" title="Tambah saudara" aria-label="Tambah saudara">+</button>
+            </h4>
+            <div class="chips" id="dSiblings"></div>
+          </div>
+        </div>
+
+        <button class="focus-btn" id="focusBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="8" />
+            <circle cx="12" cy="12" r="2.4" />
+          </svg>
+          Jadikan Fokus Silsilah
+        </button>
+      </div>
+    </aside>
+  </main>
+
+  <div class="modal-overlay" id="editModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+      <div class="modal-head">
+        <h3 id="editTitle">Edit Anggota Keluarga</h3>
+        <button class="icon-btn" id="editCancelX" type="button" aria-label="Tutup">&times;</button>
+      </div>
+      <form id="editForm" class="modal-body" novalidate>
+        <p class="form-note" id="editNote" hidden></p>
+        <div class="form-row">
+          <label>Nama Depan<input name="first" type="text" maxlength="40" required /></label>
+          <label>Nama Belakang<input name="last" type="text" maxlength="40" /></label>
+        </div>
+        <div class="form-row">
+          <label>Jenis Kelamin
+            <select name="gender">
+              <option value="male">Laki-laki</option>
+              <option value="female">Perempuan</option>
+              <option value="unknown">Tidak diketahui</option>
+            </select>
+          </label>
+          <label>Tempat Lahir<input name="birthPlace" type="text" maxlength="60" /></label>
+        </div>
+        <div class="form-row">
+          <label>Tahun Lahir<input name="birth" type="number" min="1500" max="2100" required /></label>
+          <label>Tahun Wafat<input name="death" type="number" min="1500" max="2100" placeholder="Kosong jika masih hidup" /></label>
+        </div>
+        <label class="full" id="marriageWrap" hidden>Tahun Perkawinan<input name="marriage" type="number" min="1500" max="2100" placeholder="Opsional — tahun menikah" /></label>
+        <label class="full">Pekerjaan<input name="occupation" type="text" maxlength="60" /></label>
+        <label class="full">Biografi<textarea name="bio" rows="3" maxlength="400"></textarea></label>
+        <p class="form-error" id="editError" hidden></p>
+        <div class="modal-foot">
+          <button type="button" class="btn" id="editCancel">Batal</button>
+          <button type="submit" class="btn btn-primary" id="editSubmit">Simpan Perubahan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="confirmModal" hidden>
+    <div class="modal modal-sm" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle">
+      <div class="modal-head">
+        <h3 id="confirmTitle">Hapus Anggota</h3>
+        <button class="icon-btn" id="confirmCancelX" type="button" aria-label="Tutup">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="confirm-message" id="confirmMessage"></p>
+        <div class="modal-foot">
+          <button type="button" class="btn" id="confirmCancel">Batal</button>
+          <button type="button" class="btn btn-danger" id="confirmOk">Hapus</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="marriageModal" hidden>
+    <div class="modal modal-sm" role="dialog" aria-modal="true" aria-labelledby="marriageTitle">
+      <div class="modal-head">
+        <h3 id="marriageTitle">Ubah Tahun Perkawinan</h3>
+        <button class="icon-btn" id="marriageCancelX" type="button" aria-label="Tutup">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="confirm-message" id="marriageNote"></p>
+        <label class="full">Tahun Perkawinan<input id="marriageInput" type="number" min="1500" max="2100" placeholder="Kosongkan untuk menghapus tahun" /></label>
+        <p class="form-error" id="marriageError" hidden></p>
+        <div class="modal-foot">
+          <button type="button" class="btn" id="marriageCancel">Batal</button>
+          <button type="button" class="btn btn-primary" id="marriageSave">Simpan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="data.js"></script>
+  <script src="tree.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
